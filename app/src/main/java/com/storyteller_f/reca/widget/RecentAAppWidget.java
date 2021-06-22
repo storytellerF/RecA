@@ -5,10 +5,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.GridView;
 import android.widget.RemoteViews;
 
 import com.storyteller_f.reca.MainActivity;
@@ -30,17 +30,22 @@ public class RecentAAppWidget extends AppWidgetProvider {
     private static final String action_refresh = "com.storyteller_f.widget.RecentAppEvent.Refresh";
     public static String extra_index = "com.storyteller_f_.widget.RecentAppEvent.index";
     public static String packageName = "com.storyteller_f_.widget.RecentAppEvent.package";
-
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                        int appWidgetId) {
         Log.d(TAG, "updateAppWidget() called with: context = [" + context + "], appWidgetManager = [" + appWidgetManager + "], appWidgetId = [" + appWidgetId + "]");
-        WidgetConfig widgetText = RecentAAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recent_a_app_widget);
+        WidgetConfig config = RecentAAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
+        int default_layout_resource_id=R.layout.recent_a_app_widget;
+        String input_resource_string="recent_a_app_widget_"+config.col;
+        int layout = context.getResources().getIdentifier(input_resource_string, "layout", context.getPackageName());
+        if (layout == Resources.ID_NULL) {
+            layout=default_layout_resource_id;
+        }
+        RemoteViews views = new RemoteViews(context.getPackageName(), layout);
         Intent intent = new Intent(context, RecentAppService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.putExtra("date", System.currentTimeMillis());
-        intent.putExtra("total", widgetText.col * widgetText.row);
-        intent.putExtra("isUsedTime",widgetText.isUsedTime);
+        intent.putExtra("total", config.col * config.row);
+        intent.putExtra("isUsedTime",config.isUsedTime);
 
         Uri parse = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME));
         Log.i(TAG, "updateAppWidget: uri:" + parse.getPath());
