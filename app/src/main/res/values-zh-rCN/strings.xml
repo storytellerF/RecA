@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RecA</string>
+    <string name="init_content_in_widget_string">出现故障</string>
+    <string name="string_col_input_hit">列数</string>
+    <string name="string_switch_input_hit">展示内容</string>
+    <string name="string_switch_text_on_launch_time">启动次数</string>
+    <string name="configure">配置</string>
+    <string name="add_widget">添加微件</string>
+    <string name="string_row_input_hit">行数</string>
+    <string name="string_switch_text_off_used_time">使用时长</string>
+    <string name="string_request_permission_button">请求权限</string>
+    <string name="string_force_refresh_button">强制刷新小部件</string>
+</resources>
