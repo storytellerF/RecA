@@ -36,7 +36,17 @@ public class RecentAAppWidgetConfigureActivity extends Activity {
             if (rowCount.length() <= 0 && isNotNumber(rowCount)) {
                 return;
             }
-            saveTitlePref(context, mAppWidgetId, colCount, rowCount, binding.switchShow.isChecked());
+            boolean excludeSelf = binding.switchExcludeSelf.isChecked();
+            boolean excludeToday = binding.switchExcludeToday.isChecked();
+            int type = binding.type.getCheckedRadioButtonId();
+            if (type == binding.radioButtonDay.getId()) {
+                type = 1;
+            } else if (type == binding.radioButtonWeek.getId()) {
+                type = 2;
+            } else if (type == binding.radioButtonMonth.getId()) {
+                type = 3;
+            }
+            saveTitlePref(context, mAppWidgetId, colCount, rowCount, binding.switchShow.isChecked(), excludeSelf, excludeToday, type);
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -55,10 +65,10 @@ public class RecentAAppWidgetConfigureActivity extends Activity {
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveTitlePref(Context context, int appWidgetId, String colCount, String rowCount, boolean checked) {
+    static void saveTitlePref(Context context, int appWidgetId, String colCount, String rowCount, boolean checked, boolean excludeSelf, boolean excludeToday, int type) {
         Log.d(TAG, "saveTitlePref() called with: context = [" + context + "], appWidgetId = [" + appWidgetId + "], colCount = [" + colCount + "], rowCount = [" + rowCount + "]");
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, colCount + "-" + rowCount + "-" + checked);
+        prefs.putString(PREF_PREFIX_KEY + appWidgetId, WidgetConfig.save(colCount, rowCount, checked, type, excludeSelf, excludeToday));
         prefs.apply();
     }
 
@@ -69,7 +79,7 @@ public class RecentAAppWidgetConfigureActivity extends Activity {
         String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
         if (titleValue != null) {
             String[] split = titleValue.split("-");
-            if (split.length == 3) {
+            if (split.length == WidgetConfig.count) {
                 return WidgetConfig.getConfig(split);
             } else return new WidgetConfig(2, 2);
 
@@ -128,5 +138,24 @@ public class RecentAAppWidgetConfigureActivity extends Activity {
         binding.inputCol.setText(String.valueOf(config.col));
         binding.inputRow.setText(String.valueOf(config.row));
         binding.switchShow.setChecked(config.isUsedTime);
+        int id;
+        switch (config.type) {
+            case 0:
+            case 3:
+                id = binding.radioButtonMonth.getId();
+                break;
+            case 1:
+                id = binding.radioButtonDay.getId();
+                break;
+            case 2:
+                id = binding.radioButtonWeek.getId();
+                break;
+            default:
+                id = binding.radioButtonMonth.getId();
+                break;
+        }
+        binding.type.check(id);
+        binding.switchExcludeSelf.setChecked(config.excludeSelf);
+        binding.switchExcludeToday.setChecked(config.excludeToday);
     }
 }

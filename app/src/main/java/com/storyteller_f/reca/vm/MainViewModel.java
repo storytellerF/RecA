@@ -12,13 +12,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<Boolean> getPermission() {
         if (permission == null) {
             permission = new MutableLiveData<>();
-            loadUsers();
         }
         return permission;
-    }
-
-    private void loadUsers() {
-
     }
 
     public void setP(boolean granted) {

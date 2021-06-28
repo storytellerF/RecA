@@ -10,30 +10,33 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import androidx.annotation.RequiresApi;
-
 import com.storyteller_f.reca.R;
+import com.storyteller_f.reca.WidgetConfig;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * @author faber
  */
 public class RecentAppService extends RemoteViewsService {
-
+    private static final String TAG = "RecentAppService";
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Log.d(TAG, "onGetViewFactory() called with: intent = [" + intent + "]");
+
         return new RecentAppPresentFactory(getApplicationContext(), intent);
     }
 
@@ -43,17 +46,17 @@ public class RecentAppService extends RemoteViewsService {
         private final Context context;
         private final List<DesktopApplication> desktopApplications;
         private final PackageManager packageManager;
-        private final int totalCount;
-        private final boolean isUsedTime;
+        private final WidgetConfig fromParcel;
 
         RecentAppPresentFactory(Context context, Intent intent) {
             appList = new ArrayList<>();
             desktopApplications = new ArrayList<>();
             this.context = context;
             packageManager = context.getPackageManager();
-            this.totalCount = intent.getIntExtra("total", 20);
-            isUsedTime = intent.getBooleanExtra("isUsedTime", false);
-            Log.i(TAG, "RecentAppPresentFactory: total:" + totalCount);
+            ClassLoader classLoader = WidgetConfig.class.getClassLoader();
+            intent.setExtrasClassLoader(classLoader);
+            fromParcel = WidgetConfig.from(intent);
+            Log.i(TAG, "RecentAppPresentFactory: "+ (fromParcel.row*fromParcel.col));
         }
 
         public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -65,12 +68,24 @@ public class RecentAppService extends RemoteViewsService {
             return bitmap;
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
         private void getHistoryApps(Context context) {
             Calendar calendar = Calendar.getInstance();
             long endTime = calendar.getTimeInMillis();
-
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            if (fromParcel.excludeToday) {
+                calendar.add(Calendar.DAY_OF_MONTH,-1);
+                endTime=calendar.getTimeInMillis();
+            }
+            switch (fromParcel.type) {
+                case 1:
+                    calendar.add(Calendar.DAY_OF_MONTH,-1);
+                    break;
+                case 2:
+                    calendar.add(Calendar.WEEK_OF_MONTH, -1);
+                    break;
+                default:
+                    calendar.add(Calendar.MONTH,-1);
+                    break;
+            }
             long startTime = calendar.getTimeInMillis();
             UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
             desktopApplications.clear();
@@ -88,9 +103,16 @@ public class RecentAppService extends RemoteViewsService {
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
                 }
+                HashMap<String, Application> applicationHashMap = new HashMap<>(appList.size());
+                for (LabelItem labelItem : appList) {
+                    if (labelItem instanceof Application) {
+                        Application item = (Application) labelItem;
+                        applicationHashMap.put(item.getPackageName(), item);
+                    }
+                }
                 Field finalMLaunchCount = mLaunchCount;
                 Collections.sort(usageStatsList, (o1, o2) -> {
-                    if (!isUsedTime) {
+                    if (!fromParcel.isUsedTime) {
                         if (finalMLaunchCount != null) {
                             try {
                                 int compare = Integer.compare(finalMLaunchCount.getInt(o2), finalMLaunchCount.getInt(o1));
@@ -116,7 +138,12 @@ public class RecentAppService extends RemoteViewsService {
                 });
                 int count = 0;
                 for (UsageStats usageStats : usageStatsList) {
-                    if (count >= totalCount) {
+                    if (fromParcel.excludeSelf){
+                        if (usageStats.getPackageName().equals(context.getPackageName())) {
+                            continue;
+                        }
+                    }
+                    if (count >= fromParcel.row * fromParcel.col) {
                         break;
                     }
                     if (finalMLaunchCount != null) {
@@ -128,19 +155,15 @@ public class RecentAppService extends RemoteViewsService {
                     } else {
                         Log.i(TAG, "getHistoryApps: " + usageStats.getPackageName() + " " + usageStats.getTotalTimeVisible());
                     }
-                    for (LabelItem p : appList) {//确保此应用在app settingItems 列表中
-                        if (p instanceof Application) {
-                            Application application = (Application) p;
-                            if (usageStats.getPackageName().equals(application.getPackageName())) {
-                                DesktopApplication e = new DesktopApplication(application.getImage(), application.getLabel(), usageStats.getPackageName(), null, 1);
-                                if (isContainer(desktopApplications, application)) {//检查是否已经添加过
-                                    count++;
-                                    desktopApplications.add(e);
-                                }
+                    if (applicationHashMap.containsKey(usageStats.getPackageName())) {
+                        Application application = applicationHashMap.get(usageStats.getPackageName());
+                        assert application != null;
+                        if (usageStats.getPackageName().equals(application.getPackageName())) {
+                            DesktopApplication e = new DesktopApplication(application.getImage(), application.getLabel(), usageStats.getPackageName(), null, 1);
+                            if (isContainer(desktopApplications, application)) {//检查是否已经添加过
+                                count++;
+                                desktopApplications.add(e);
                             }
-                        }
-                        if (count >= totalCount) {
-                            break;
                         }
                     }
 

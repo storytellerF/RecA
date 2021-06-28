@@ -1,52 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/string_row_input_hit" />
 
-    <EditText
-        android:id="@+id/inputRow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/add_widget"
+        app:layout_constraintEnd_toEndOf="@+id/switchExcludeSelf"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/switchExcludeSelf"
+        app:layout_constraintTop_toBottomOf="@+id/switchExcludeSelf" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <Switch
+        android:id="@+id/switchExcludeSelf"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/string_col_input_hit" />
+        android:text="排除本应用"
+        app:layout_constraintEnd_toEndOf="@+id/switchExcludeToday"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/switchExcludeToday"
+        app:layout_constraintTop_toBottomOf="@+id/switchExcludeToday" />
+
+    <RadioGroup
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/switchShow"
+        app:layout_constraintStart_toStartOf="@+id/switchShow"
+        app:layout_constraintTop_toBottomOf="@+id/switchShow">
+
+        <RadioButton
+            android:id="@+id/radioButtonDay"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:text="天" />
+
+        <RadioButton
+            android:id="@+id/radioButtonWeek"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:text="周" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMonth"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:text="月" />
+
+    </RadioGroup>
 
     <EditText
         android:id="@+id/inputCol"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="number"
-        android:importantForAutofill="no" />
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchShow"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:checked="false"
         android:showText="true"
         android:splitTrack="true"
         android:text="@string/string_switch_input_hit"
         android:textOff="@string/string_switch_text_on_launch_time"
-        android:textOn="@string/string_switch_text_off_used_time" />
+        android:textOn="@string/string_switch_text_off_used_time"
+        app:layout_constraintEnd_toEndOf="@+id/inputCol"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/inputCol"
+        app:layout_constraintTop_toBottomOf="@+id/inputCol" />
 
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_widget" />
+        android:layout_marginTop="16dp"
+        android:text="@string/string_row_input_hit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <EditText
+        android:id="@+id/inputRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/textView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/string_col_input_hit"
+        app:layout_constraintEnd_toEndOf="@+id/inputRow"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/inputRow"
+        app:layout_constraintTop_toBottomOf="@+id/inputRow" />
+
+    <Switch
+        android:id="@+id/switchExcludeToday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="排除今天"
+        app:layout_constraintEnd_toEndOf="@+id/type"
+        app:layout_constraintStart_toStartOf="@+id/type"
+        app:layout_constraintTop_toBottomOf="@+id/type" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

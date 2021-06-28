@@ -1,7 +1,6 @@
 package com.storyteller_f.reca.widget;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 public class DesktopApplication extends Application {
     private final int type;

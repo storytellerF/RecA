@@ -28,11 +28,10 @@ public class RecentAAppWidget extends AppWidgetProvider {
     private static final String action_click = "com.storyteller_f.widget.RecentAppEvent.Click";
     private static final String action_setting = "com.storyteller_f.widget.RecentAppEvent.Setting";
     private static final String action_refresh = "com.storyteller_f.widget.RecentAppEvent.Refresh";
-    public static String extra_index = "com.storyteller_f_.widget.RecentAppEvent.index";
-    public static String packageName = "com.storyteller_f_.widget.RecentAppEvent.package";
+    public static final String extra_index = "com.storyteller_f_.widget.RecentAppEvent.index";
+    public static final String packageName = "com.storyteller_f_.widget.RecentAppEvent.package";
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                        int appWidgetId) {
-        Log.d(TAG, "updateAppWidget() called with: context = [" + context + "], appWidgetManager = [" + appWidgetManager + "], appWidgetId = [" + appWidgetId + "]");
         WidgetConfig config = RecentAAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         int default_layout_resource_id=R.layout.recent_a_app_widget;
         String input_resource_string="recent_a_app_widget_"+config.col;
@@ -44,9 +43,7 @@ public class RecentAAppWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, RecentAppService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.putExtra("date", System.currentTimeMillis());
-        intent.putExtra("total", config.col * config.row);
-        intent.putExtra("isUsedTime",config.isUsedTime);
-
+        WidgetConfig.putToIntent(intent,config);
         Uri parse = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME));
         Log.i(TAG, "updateAppWidget: uri:" + parse.getPath());
         intent.setData(parse);

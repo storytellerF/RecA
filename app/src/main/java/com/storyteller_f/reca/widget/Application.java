@@ -1,7 +1,6 @@
 package com.storyteller_f.reca.widget;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 public class Application extends ImageItem {
     public Application(Bitmap bitmap, String label, String packageName) {
