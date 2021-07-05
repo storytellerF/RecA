@@ -1,5 +1,6 @@
 package com.storyteller_f.reca.widget;
 
+import android.annotation.SuppressLint;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
@@ -29,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author faber
+ * @author storyteller_f
  */
 public class RecentAppService extends RemoteViewsService {
     private static final String TAG = "RecentAppService";
@@ -99,6 +100,7 @@ public class RecentAppService extends RemoteViewsService {
             if (usageStatsList != null && !usageStatsList.isEmpty()) {
                 Field mLaunchCount = null;
                 try {
+                    //noinspection JavaReflectionMemberAccess
                     mLaunchCount = UsageStats.class.getDeclaredField("mAppLaunchCount");
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
@@ -191,7 +193,7 @@ public class RecentAppService extends RemoteViewsService {
             appList.clear();
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> resolve = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+            @SuppressLint("QueryPermissionsNeeded") List<ResolveInfo> resolve = context.getPackageManager().queryIntentActivities(mainIntent, 0);
             for (ResolveInfo r : resolve) {
                 try {
                     Drawable applicationIcon = packageManager.getApplicationIcon(r.activityInfo.packageName);
