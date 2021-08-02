@@ -53,16 +53,16 @@ public class RecentAAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.updatedTime, simpleDateFormat.format(new Date(l)));
         /*设置按钮*/
         {
-            Intent redrawIntent = new Intent(context, RecentAAppWidget.class).setAction(action_setting);
-            redrawIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            PendingIntent redrawPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, redrawIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent setting = new Intent(context, RecentAAppWidget.class).setAction(action_setting);
+            setting.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            PendingIntent redrawPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, setting, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.buttonSetting, redrawPendingIntent);
         }
         /*重绘按钮*/
         {
             Intent redrawIntent = new Intent(context, RecentAAppWidget.class).setAction(action_refresh);
             redrawIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            PendingIntent redrawPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, redrawIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent redrawPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, redrawIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.buttonRefresh, redrawPendingIntent);
         }
         /*
@@ -73,7 +73,7 @@ public class RecentAAppWidget extends AppWidgetProvider {
             clickAction.setAction(action_click);
             clickAction.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 //            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, clickAction, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, clickAction, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.aList, toastPendingIntent);
         }
         appWidgetManager.updateAppWidget(appWidgetId, views);

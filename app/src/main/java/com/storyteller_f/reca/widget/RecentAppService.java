@@ -13,8 +13,6 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -94,7 +92,7 @@ public class RecentAppService extends RemoteViewsService {
                 extractList(endTime, startTime, mUsageStatsManager);
             }
         }
-
+        @SuppressLint("SoonBlockedPrivateApi")
         private void extractList(long endTime, long startTime, UsageStatsManager mUsageStatsManager) {
             List<UsageStats> usageStatsList = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime);
             if (usageStatsList != null && !usageStatsList.isEmpty()) {
@@ -102,7 +100,7 @@ public class RecentAppService extends RemoteViewsService {
                 try {
                     //noinspection JavaReflectionMemberAccess
                     mLaunchCount = UsageStats.class.getDeclaredField("mAppLaunchCount");
-                } catch (NoSuchFieldException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 HashMap<String, Application> applicationHashMap = new HashMap<>(appList.size());

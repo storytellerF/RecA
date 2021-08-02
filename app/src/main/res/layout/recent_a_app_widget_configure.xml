@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,11 +16,11 @@
         app:layout_constraintStart_toStartOf="@+id/switchExcludeSelf"
         app:layout_constraintTop_toBottomOf="@+id/switchExcludeSelf" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchExcludeSelf"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="排除本应用"
+        android:text="@string/string_exclusive_this_app"
         app:layout_constraintEnd_toEndOf="@+id/switchExcludeToday"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/switchExcludeToday"
@@ -39,19 +38,19 @@
             android:id="@+id/radioButtonDay"
             android:layout_width="379dp"
             android:layout_height="wrap_content"
-            android:text="天" />
+            android:text="@string/string_a_day" />
 
         <RadioButton
             android:id="@+id/radioButtonWeek"
             android:layout_width="379dp"
             android:layout_height="wrap_content"
-            android:text="周" />
+            android:text="@string/string_a_week" />
 
         <RadioButton
             android:id="@+id/radioButtonMonth"
             android:layout_width="379dp"
             android:layout_height="wrap_content"
-            android:text="月" />
+            android:text="@string/string_a_month" />
 
     </RadioGroup>
 
@@ -62,6 +61,7 @@
         android:ems="10"
         android:importantForAutofill="no"
         android:inputType="number"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/textView3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView3"
@@ -80,9 +80,10 @@
         app:layout_constraintEnd_toEndOf="@+id/inputCol"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/inputCol"
-        app:layout_constraintTop_toBottomOf="@+id/inputCol" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
+        android:labelFor="@id/inputRow"
         android:id="@+id/textView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -97,13 +98,16 @@
         android:id="@+id/inputRow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:inputType="text"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
+        android:labelFor="@id/inputCol"
         android:id="@+id/textView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -113,13 +117,22 @@
         app:layout_constraintStart_toStartOf="@+id/inputRow"
         app:layout_constraintTop_toBottomOf="@+id/inputRow" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchExcludeToday"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="排除今天"
+        android:text="@string/string_exclusive_today"
         app:layout_constraintEnd_toEndOf="@+id/type"
         app:layout_constraintStart_toStartOf="@+id/type"
         app:layout_constraintTop_toBottomOf="@+id/type" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/string_col_tips"
+        app:layout_constraintEnd_toEndOf="@+id/inputCol"
+        app:layout_constraintStart_toStartOf="@+id/inputCol"
+        app:layout_constraintTop_toBottomOf="@+id/inputCol" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

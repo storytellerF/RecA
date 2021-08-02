@@ -4,10 +4,16 @@
     <string name="add_widget">Add widget</string>
     <string name="string_row_input_hit">row</string>
     <string name="string_col_input_hit">column</string>
-    <string name="string_switch_input_hit">show</string>
+    <string name="string_switch_input_hit">sort by</string>
     <string name="string_switch_text_on_launch_time">launch time</string>
     <string name="string_switch_text_off_used_time">used time</string>
     <string name="init_content_in_widget_string">This is some error!</string>
     <string name="string_request_permission_button">request permmission</string>
     <string name="string_force_refresh_button">force refresh widget</string>
+    <string name="string_exclusive_this_app">exclusive RecA</string>
+    <string name="string_a_day">day</string>
+    <string name="string_a_week">week</string>
+    <string name="string_a_month">month</string>
+    <string name="string_exclusive_today">exclusive today</string>
+    <string name="string_col_tips">expected 2–5</string>
 </resources>
